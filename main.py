@@ -657,20 +657,20 @@ def main():
             mouth_eye_vector_c = [0.0] * 27
             pose_vector_c = [0.0] * 6
 
-            mouth_eye_vector_c[2] = math.sin(time.perf_counter() * 3)
-            mouth_eye_vector_c[3] = math.sin(time.perf_counter() * 3)
+            #mouth_eye_vector_c[2] = math.sin(time.perf_counter() * 1)
+            #mouth_eye_vector_c[3] = math.sin(time.perf_counter() * 1)
 
-            mouth_eye_vector_c[14] = 0
+            #mouth_eye_vector_c[14] = 0
 
-            mouth_eye_vector_c[25] = math.sin(time.perf_counter() * 2.2) * 0.2
-            mouth_eye_vector_c[26] = math.sin(time.perf_counter() * 3.5) * 0.8
+            #mouth_eye_vector_c[25] = math.sin(time.perf_counter() * 1.2) * 0.2
+            #mouth_eye_vector_c[26] = math.sin(time.perf_counter() * 1.5) * 0.8
 
-            pose_vector_c[0] = math.sin(time.perf_counter() * 1.1)
-            pose_vector_c[1] = math.sin(time.perf_counter() * 1.2)
-            pose_vector_c[2] = math.sin(time.perf_counter() * 1.5)
+            pose_vector_c[0] = math.sin(time.perf_counter() * 0.6) * 0.2
+            pose_vector_c[1] = math.sin(time.perf_counter() * 0.6) * 0.4
+            #pose_vector_c[2] = math.sin(time.perf_counter() * 0.1)
 
-            eyebrow_vector_c[6]=math.sin(time.perf_counter() * 1.1)
-            eyebrow_vector_c[7]=math.sin(time.perf_counter() * 1.1)
+            #eyebrow_vector_c[6]=math.sin(time.perf_counter() * 1.1)
+            #eyebrow_vector_c[7]=math.sin(time.perf_counter() * 1.1)
 
         elif args.osf is not None:
             try:
@@ -864,7 +864,7 @@ def main():
                                 channels=2,
                                 rate=44100,
                                 input=True,
-                                output_device_index=p.get_default_input_device_info()["index"])
+                                input_device_index=2)
             data = stream.read(1024)
             # Convert data to numpy array
             data = np.frombuffer(data, dtype=np.int16)
@@ -960,29 +960,30 @@ def main():
             output_frame = cv2.cvtColor(postprocessed_image, cv2.COLOR_RGBA2BGRA)
             # resized_frame = cv2.resize(output_frame, (np.min(debug_image.shape[:2]), np.min(debug_image.shape[:2])))
             # output_frame = np.concatenate([debug_image, resized_frame], axis=1)
-            cv2.putText(output_frame, str('OUT_FPS:%.1f' % output_fps_number), (0, 16), cv2.FONT_HERSHEY_PLAIN, 1,
-                        (0, 255, 0), 1)
-            if args.max_cache_len > 0:
-                cv2.putText(output_frame, str(
-                    'GPU_FPS:%.1f / %.1f' % (model_process.model_fps_number.value, model_process.gpu_fps_number.value)),
-                            (0, 32),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
-            else:
-                cv2.putText(output_frame, str(
-                    'GPU_FPS:%.1f' % (model_process.model_fps_number.value)),
-                            (0, 32),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
-            if args.ifm is not None:
-                cv2.putText(output_frame, str('IFM_FPS:%.1f' % client_process.ifm_fps_number.value), (0, 48),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
-            if args.max_cache_len > 0:
-                cv2.putText(output_frame, str('MEMCACHED:%.1f%%' % (model_process.cache_hit_ratio.value * 100)),
-                            (0, 64),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
-            if args.max_gpu_cache_len > 0:
-                cv2.putText(output_frame, str('GPUCACHED:%.1f%%' % (model_process.gpu_cache_hit_ratio.value * 100)),
-                            (0, 80),
-                            cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+            if args.showfps:
+                cv2.putText(output_frame, str('OUT_FPS:%.1f' % output_fps_number), (0, 16), cv2.FONT_HERSHEY_PLAIN, 1,
+                            (0, 255, 0), 1)
+                if args.max_cache_len > 0:
+                    cv2.putText(output_frame, str(
+                        'GPU_FPS:%.1f / %.1f' % (model_process.model_fps_number.value, model_process.gpu_fps_number.value)),
+                                (0, 32),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+                else:
+                    cv2.putText(output_frame, str(
+                        'GPU_FPS:%.1f' % (model_process.model_fps_number.value)),
+                                (0, 32),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+                if args.ifm is not None:
+                    cv2.putText(output_frame, str('IFM_FPS:%.1f' % client_process.ifm_fps_number.value), (0, 48),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+                if args.max_cache_len > 0:
+                    cv2.putText(output_frame, str('MEMCACHED:%.1f%%' % (model_process.cache_hit_ratio.value * 100)),
+                                (0, 64),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+                if args.max_gpu_cache_len > 0:
+                    cv2.putText(output_frame, str('GPUCACHED:%.1f%%' % (model_process.gpu_cache_hit_ratio.value * 100)),
+                                (0, 80),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
             cv2.imshow("frame", output_frame)
             # cv2.imshow("camera", debug_image)
             cv2.waitKey(1)

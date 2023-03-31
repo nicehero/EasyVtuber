@@ -11,6 +11,7 @@ def convert_to_byte(size):
     raise ValueError("Invalid size provided, value is " + size)
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--showfps', action='store_true',default=False)
 parser.add_argument('--debug', action='store_true')
 parser.add_argument('--eyebrow', action='store_true')
 parser.add_argument('--extend_movement', type=float)

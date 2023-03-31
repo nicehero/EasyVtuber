@@ -115,7 +115,8 @@ def launch():
             run_args.append('--output_webcam')
             run_args.append('obs')
         elif args['output'] == 2:
-            run_args.append('--debug')
+            #run_args.append('--debug')
+            pass
         if args['is_anime4k']:
             run_args.append('--anime4k')
         if args['is_alpha_split']:
